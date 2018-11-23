@@ -80,14 +80,14 @@ pub struct PerlDeps {
 #[derive(Deserialize, Debug)]
 pub struct Repository {
     #[serde(rename = "type")]
-    pub repo_type: String,
-    pub web: String,
-    pub url: String,
+    pub repo_type: Option<String>,
+    pub web: Option<String>,
+    pub url: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Resources {
-    pub homepage: String,
+    pub homepage: Option<String>,
     pub repository: Repository,
 }
 
@@ -95,7 +95,7 @@ pub struct Resources {
 pub struct PerlInfo {
     pub name: String,
     #[serde(rename = "abstract")]
-    pub description: String,
+    pub description: Option<String>,
     pub version: String,
     pub license: Vec<String>,
     pub resources: Resources,
