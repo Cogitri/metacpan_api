@@ -82,6 +82,7 @@ pub struct PerlInfo {
     pub description: Option<String>,
     pub download_url: String,
     pub license: Option<Vec<String>>,
+    #[serde(rename = "distribution")]
     pub name: String,
     pub resources: Resources,
     pub version: String,
@@ -143,7 +144,7 @@ mod test {
     fn test_name() {
         let client = SyncClient::new();
         let perl_info = client.perl_info("Moose");
-        assert!(perl_info.unwrap().name.len() > 0);
+        assert_eq!(perl_info.unwrap().name, "Moose");
     }
 
     #[test]
