@@ -53,30 +53,6 @@ pub struct SyncClient {
     base_url: Url,
 }
 
-// TODO: parsing dependencies doesn't work as of now
-/*
-#[derive(Deserialize)]
-pub struct Deps {
-    #[serde(untagged)]
-    pub dep: String,
-}
-
-#[derive(Deserialize)]
-pub struct PerlDepDetail {
-    pub suggests: Option<Vec<String>>,
-    pub recommends: Option<Vec<String>>,
-    pub requires: Option<Vec<String>>,
-}
-
-#[derive(Deserialize)]
-pub struct PerlDeps {
-    pub runtime: PerlDepDetail,
-    pub develop: PerlDepDetail,
-    pub test: PerlDepDetail,
-    pub configure: PerlDepDetail,
-}
-*/
-
 #[derive(Deserialize, Debug)]
 pub struct Repository {
     #[serde(rename = "type")]
@@ -101,10 +77,10 @@ pub struct PerlDep {
 
 #[derive(Deserialize, Debug)]
 pub struct PerlInfo {
-    pub dependency: Vec<PerlDep>,
+    pub dependency: Option<Vec<PerlDep>>,
     #[serde(rename = "abstract")]
     pub description: Option<String>,
-    pub license: Vec<String>,
+    pub license: Option<Vec<String>>,
     pub name: String,
     pub resources: Resources,
     pub version: String,
