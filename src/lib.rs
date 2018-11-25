@@ -80,6 +80,7 @@ pub struct PerlInfo {
     pub dependency: Option<Vec<PerlDep>>,
     #[serde(rename = "abstract")]
     pub description: Option<String>,
+    pub download_url: String,
     pub license: Option<Vec<String>>,
     pub name: String,
     pub resources: Resources,
@@ -129,6 +130,7 @@ impl SyncClient {
         Ok(PerlInfo{
             dependency: data.dependency,
             description: data.description,
+            download_url: data.download_url,
             license: data.license,
             name: data.name,
             resources: deserialized_resources,
