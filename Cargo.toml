@@ -1,6 +1,6 @@
 [package]
 name = "metacpan_api"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Rasmus Thomsen <rasmus.thomsen@protonmail.com>"]
 description = "Query the metacpan.org API"
 homepage = "https://github.com/Cogitri/metacpan_api"
