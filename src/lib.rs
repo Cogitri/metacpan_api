@@ -115,7 +115,7 @@ impl SyncClient {
     }
 
     pub fn perl_info(&self, name: &str) -> Result<PerlInfo, Error> {
-        let url = self.base_url.join(&name)?;
+        let url = self.base_url.join(&name.replace("::", "-"))?;
         let data: PerlInfo = self.get(url)?;
 
         let deserialized_resources = Resources {
@@ -147,6 +147,13 @@ mod test {
     fn test_name() {
         let client = SyncClient::new();
         let perl_info = client.perl_info("Moose");
+        assert!(perl_info.unwrap().name.len() > 0);
+    }
+
+    #[test]
+    fn test_db_point_names() {
+        let client = SyncClient::new();
+        let perl_info = client.perl_info("JSON::PP");
         assert!(perl_info.unwrap().name.len() > 0);
     }
 }
