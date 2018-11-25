@@ -88,6 +88,11 @@ pub struct PerlInfo {
     pub version: String,
 }
 
+#[derive(Deserialize, Debug)]
+struct PerlModule {
+    distribution: String,
+}
+
 impl SyncClient {
     /// Instantiate a new synchronous API client.
     ///
@@ -95,7 +100,7 @@ impl SyncClient {
     pub fn new() -> Self {
         SyncClient {
             client: reqwest::Client::new(),
-            base_url: Url::parse("https://fastapi.metacpan.org/v1/release/").unwrap(),
+            base_url: Url::parse("https://fastapi.metacpan.org/v1/").unwrap(),
         }
     }
 
@@ -116,7 +121,7 @@ impl SyncClient {
     }
 
     pub fn perl_info(&self, name: &str) -> Result<PerlInfo, Error> {
-        let url = self.base_url.join(&name.replace("::", "-"))?;
+        let url = self.base_url.join(&("release/".to_string() + &name.replace("::", "-")))?;
         let data: PerlInfo = self.get(url)?;
 
         let deserialized_resources = Resources {
@@ -133,6 +138,15 @@ impl SyncClient {
             resources: deserialized_resources,
             version: data.version,
         })
+    }
+
+    /// Takes the name of a module and returns the name of the distribution
+    /// it's in
+    pub fn get_dist(&self, name: &str) -> Result<String, Error> {
+        let url = self.base_url.join(&("module/".to_string() + &name))?;
+        let data: PerlModule = self.get(url)?;
+
+        Ok(data.distribution)
     }
 }
 
@@ -152,5 +166,12 @@ mod test {
         let client = SyncClient::new();
         let perl_info = client.perl_info("JSON::PP");
         assert!(perl_info.unwrap().name.len() > 0);
+    }
+
+    #[test]
+    fn query_module() {
+        let client = SyncClient::new();
+        let perl_info = client.perl_info(&client.get_dist("Scalar::Util").unwrap());
+        assert_eq!(perl_info.unwrap().name, "Scalar-List-Utils");
     }
 }
