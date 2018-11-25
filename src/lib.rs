@@ -64,7 +64,7 @@ pub struct Repository {
 #[derive(Deserialize, Debug)]
 pub struct Resources {
     pub homepage: Option<String>,
-    pub repository: Repository,
+    pub repository: Option<Repository>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -120,11 +120,7 @@ impl SyncClient {
 
         let deserialized_resources = Resources {
             homepage: data.resources.homepage,
-            repository: Repository {
-                repo_type: data.resources.repository.repo_type,
-                web: data.resources.repository.web,
-                url: data.resources.repository.url,
-            },
+            repository: data.resources.repository,
         };
 
         Ok(PerlInfo {
