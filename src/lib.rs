@@ -124,10 +124,10 @@ impl SyncClient {
                 repo_type: data.resources.repository.repo_type,
                 web: data.resources.repository.web,
                 url: data.resources.repository.url,
-            }
+            },
         };
 
-        Ok(PerlInfo{
+        Ok(PerlInfo {
             dependency: data.dependency,
             description: data.description,
             download_url: data.download_url,
