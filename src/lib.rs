@@ -92,18 +92,22 @@ pub struct Resources {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct PerlInfo {
-    pub name: String,
-    #[serde(rename = "abstract")]
-    pub description: Option<String>,
+pub struct PerlDep {
+    pub module: String,
+    pub phase: String,
+    pub relationship: String,
     pub version: String,
-    pub license: Vec<String>,
-    pub resources: Resources,
 }
 
 #[derive(Deserialize, Debug)]
-pub struct Data {
-    pub metadata: PerlInfo,
+pub struct PerlInfo {
+    pub dependency: Vec<PerlDep>,
+    #[serde(rename = "abstract")]
+    pub description: Option<String>,
+    pub license: Vec<String>,
+    pub name: String,
+    pub resources: Resources,
+    pub version: String,
 }
 
 impl SyncClient {
@@ -135,48 +139,24 @@ impl SyncClient {
 
     pub fn perl_info(&self, name: &str) -> Result<PerlInfo, Error> {
         let url = self.base_url.join(&name)?;
-        let data: Data = self.get(url)?;
+        let data: PerlInfo = self.get(url)?;
 
         let deserialized_resources = Resources {
-            homepage: data.metadata.resources.homepage,
+            homepage: data.resources.homepage,
             repository: Repository {
-                repo_type: data.metadata.resources.repository.repo_type,
-                web: data.metadata.resources.repository.web,
-                url: data.metadata.resources.repository.url,
+                repo_type: data.resources.repository.repo_type,
+                web: data.resources.repository.web,
+                url: data.resources.repository.url,
             }
         };
-
-        /*
-        let deserialized_deps = PerlDeps {
-            runtime: PerlDepDetail {
-                requires: data.metadata.dependencies.runtime.requires,
-                recommends: data.metadata.dependencies.runtime.recommends,
-                suggests: data.metadata.dependencies.runtime.suggests,
-            },
-            test: PerlDepDetail {
-                requires: data.metadata.dependencies.test.requires,
-                recommends: data.metadata.dependencies.test.recommends,
-                suggests: data.metadata.dependencies.test.suggests,
-            },
-            configure: PerlDepDetail {
-                requires: data.metadata.dependencies.configure.requires,
-                recommends: data.metadata.dependencies.configure.recommends,
-                suggests: data.metadata.dependencies.configure.suggests,
-            },
-            develop: PerlDepDetail {
-                requires: data.metadata.dependencies.develop.requires,
-                recommends: data.metadata.dependencies.develop.recommends,
-                suggests: data.metadata.dependencies.develop.suggests,
-            }
-        };
-        */
 
         Ok(PerlInfo{
-            name: data.metadata.name,
-            description: data.metadata.description,
-            version: data.metadata.version,
-            license: data.metadata.license,
+            dependency: data.dependency,
+            description: data.description,
+            license: data.license,
+            name: data.name,
             resources: deserialized_resources,
+            version: data.version,
         })
     }
 }
