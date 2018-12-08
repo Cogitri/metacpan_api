@@ -85,7 +85,7 @@ pub struct PerlInfo {
     #[serde(rename = "distribution")]
     pub name: String,
     pub resources: Resources,
-    pub version: String,
+    pub version: serde_json::value::Value,
 }
 
 #[derive(Deserialize, Debug)]
@@ -136,7 +136,7 @@ impl SyncClient {
             license: data.license,
             name: data.name,
             resources: deserialized_resources,
-            version: data.version,
+            version: serde_json::Value::String(data.version.to_string()),
         })
     }
 
@@ -173,5 +173,11 @@ mod test {
         let client = SyncClient::new();
         let perl_info = client.perl_info(&client.get_dist("Scalar::Util").unwrap());
         assert_eq!(perl_info.unwrap().name, "Scalar-List-Utils");
+    }
+
+    #[test]
+    fn float_ver() {
+        let client = SyncClient::new();
+        client.perl_info("Dist-Zilla-Plugin-Conflicts").unwrap();
     }
 }
