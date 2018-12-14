@@ -13,11 +13,11 @@
 //You should have received a copy of the GNU General Public License
 //along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-use serde_derive::Deserialize;
 use failure::Fail;
+use log::info;
 use reqwest::{StatusCode, Url};
 use serde::de::DeserializeOwned;
-use log::{info};
+use serde_derive::Deserialize;
 
 #[derive(Fail, Debug)]
 pub enum Error {
@@ -114,7 +114,9 @@ impl SyncClient {
     }
 
     pub fn perl_info(&self, name: &str) -> Result<PerlInfo, Error> {
-        let url = self.base_url.join(&("release/".to_string() + &name.replace("::", "-")))?;
+        let url = self
+            .base_url
+            .join(&("release/".to_string() + &name.replace("::", "-")))?;
         let data: PerlInfo = self.get(url)?;
 
         let deserialized_resources = Resources {
