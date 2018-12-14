@@ -9,6 +9,7 @@ readme = "README.md"
 license = "GPL-3.0-or-later"
 keywords = ["json", "library"]
 categories = ["api-bindings"]
+edition = "2018"
 
 [dependencies]
 reqwest = "0.9"
